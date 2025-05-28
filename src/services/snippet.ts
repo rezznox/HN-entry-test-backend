@@ -17,7 +17,7 @@ export const queryLLM = async (text: string): Promise<OpenAiStream> => {
         input: [
             {
                 role: "user",
-                content: "Say 'double bubble bath' ten times fast.",
+                content: text,
             },
         ],
         stream: true,
@@ -27,6 +27,9 @@ export const queryLLM = async (text: string): Promise<OpenAiStream> => {
 }
 
 export const getSnippet = async (id: string) => {
+    if (!id.match(/^[0-9a-fA-F]{24}$/)?.length) {
+        return null;
+    }
     const snippetFromDB = await SnippetModel.findById(id);
     if (snippetFromDB) {
         return snippetFromDB?.toJSON();

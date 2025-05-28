@@ -1,8 +1,0 @@
-# Use the official MongoDB base image
-FROM mongo:7.0
-
-# Expose the default MongoDB port
-EXPOSE 27017
-
-# Use the default entrypoint provided by the image
-CMD ["mongod"]
