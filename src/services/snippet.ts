@@ -1,5 +1,6 @@
 import OpenAI from "openai";
 import { Stream } from "openai/streaming.mjs";
+import { SnippetModel } from "../mongoose/schema";
 
 type OpenAiStream = (Stream<OpenAI.Responses.ResponseStreamEvent> & { _request_id?: string | null; }) | null;
 
@@ -22,4 +23,12 @@ export const queryLLM = async (text: string): Promise<OpenAiStream> => {
     });
 
     return stream;
+}
+
+export const getSnippet = async (id: string) => {
+    const snippetFromDB = await SnippetModel.findById(id);
+    if (snippetFromDB) {
+        return snippetFromDB?.toJSON();
+    }
+    return null;
 }
