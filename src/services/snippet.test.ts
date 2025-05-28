@@ -1,4 +1,4 @@
-import { queryLLM } from "./snippet";
+import { createSnippet, getSnippet, queryLLM } from "./snippet";
 jest.mock('openai', () => {
     return jest.fn().mockImplementation(() => {
         return {
@@ -8,6 +8,20 @@ jest.mock('openai', () => {
         };
       });
 })
+jest.mock('../mongoose/schema', () => {
+    return {
+        SnippetModel: {
+            findById: jest.fn(async (id) => {
+                if (id === 'asExpected') {
+                    return {
+                        toJSON: () => ({summary: 'summary'})
+                    };
+                }
+            }),
+            create: jest.fn()
+        }
+    }
+});
 import OpenAI from "openai";
 
 describe('Snippet Service', () => {
@@ -33,6 +47,16 @@ describe('Snippet Service', () => {
 
     it('queryOpenAi should return OpenAI stream', async () => {
         const stream = await queryLLM('Text');
-        expect(stream).not.toHaveBeenCalled();
+        expect(stream).not.toHaveBeenCalled();  
+    })
+
+    it('should get snippet', async () => {
+        const snippet = await getSnippet('asExpected');
+        expect(snippet?.summary).toEqual('summary');
+    });
+
+    it('should create snippet', () => {
+        const stream = createSnippet('snippet');
+        expect(OpenAI).toHaveBeenCalledWith({apiKey});
     })
 });

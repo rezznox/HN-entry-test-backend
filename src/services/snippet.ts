@@ -1,6 +1,7 @@
 import OpenAI from "openai";
 import { Stream } from "openai/streaming.mjs";
 import { SnippetModel } from "../mongoose/schema";
+import { Document } from "mongoose";
 
 type OpenAiStream = (Stream<OpenAI.Responses.ResponseStreamEvent> & { _request_id?: string | null; }) | null;
 
@@ -12,7 +13,7 @@ export const queryLLM = async (text: string): Promise<OpenAiStream> => {
 
     const stream = await client.responses.create({
         model: process.env.OPENAI_MODEL ?? 'o4-mini-2025-04-16',
-        instructions: process.env.OPENAI_PROMPT, 
+        instructions: process.env.OPENAI_PROMPT,
         input: [
             {
                 role: "user",
@@ -31,4 +32,12 @@ export const getSnippet = async (id: string) => {
         return snippetFromDB?.toJSON();
     }
     return null;
+}
+
+export const createSnippet = async (text: string): Promise<Document> => {
+    return await SnippetModel.create({summary: null, text: text});
+}
+
+export const updateSnippet = async (snippet :Document, summary: string) => {
+    await snippet.updateOne({ summary: summary });
 }
