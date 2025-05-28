@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  # MongoDB Service
+  mongo:
+    build:
+      context: .
+      dockerfile: mongo/Dockerfile
+    container_name: mongo-db
+    volumes:
+      - mongo_data:/data/db
+    ports:
+      - "27017:27017"
+    networks:
+      - ai-network
+
+  # Node.js Express App
+  ai-node-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ai-node-service
+    depends_on:
+      - mongo
+    ports:
+      - "3000:3000"
+    networks:
+      - ai-network
+    command: ["sh", "-c", "sleep 10 && npm start"]
+
+networks:
+  ai-network:
+    driver: bridge
+
+volumes:
+  mongo_data:
+    driver: local
