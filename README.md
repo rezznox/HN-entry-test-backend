@@ -26,11 +26,29 @@ Hostname in which the mongo instance/cluster lives. It looks like a criptyc stri
 
 After setting all of those environment variables your are free to execute commands! Like the following:
 
-```
+```sh
   docker compose build && docker compose up
 ```
 
 After that your container should be ready to accept requests. Also you can run it with `npm ci && npm start` if you are feeling lucky.
+
+The app should be running at the URL [http://localhost:3000](http://localhost:3000).
+
+### Endpoints
+  There's two endpoints of interest in this app:
+#### Snippet/:id GET
+You can get any snipper previously created by giving its _id_
+
+```sh
+curl http://localhost:3000/snippet/68376b5359b8d84aa63d33de
+```
+
+#### Snippet POST
+With the following curl request you can access the API for OpenAI
+
+```sh
+curl -X POST http://localhost:3000/snippet/ -H "Content-Type: application/json" -d '{"text":"This is a test to see if you fall for it"}'
+```
 
 # Reflection
 
