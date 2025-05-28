@@ -5,7 +5,9 @@ services:
   mongo:
     build:
       context: .
-      dockerfile: mongo/Dockerfile
+      dockerfile: DockerfileMongo
+    env_file:
+      - .env
     container_name: mongo-db
     volumes:
       - mongo_data:/data/db
@@ -19,6 +21,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    env_file:
+      - .env
     container_name: ai-node-service
     depends_on:
       - mongo

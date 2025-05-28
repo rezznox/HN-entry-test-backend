@@ -8,7 +8,7 @@ const retrieveSnippet = async (req: Request, res: Response) => {
 
 const createAndGetSnippet = async (req: Request, res: Response) => {
     const text = req.body.text;
-    if (text) {
+    if (!text) {
         throw new Error('No text sent');
     }
     const snippet = await createSnippet(text);
